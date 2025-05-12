@@ -14,14 +14,14 @@ const Stack = createNativeStackNavigator();
 export default function AppNavigator() {
     return (
         <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Profile" component={ProfileScreen} />
-            <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
-            <Stack.Screen name="Expenses" component={ExpenseListScreen} />
-            <Stack.Screen name="EditExpense" component={EditExpenseScreen} />
-            <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="AddExpense" component={AddExpenseScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Expenses" component={ExpenseListScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="EditExpense" component={EditExpenseScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 }

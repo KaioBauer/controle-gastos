@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    Alert,
+    TouchableOpacity,
+    ActivityIndicator
+} from 'react-native';
 import { auth, db, doc, getDoc, signOut } from '../firebase';
 
 export default function ProfileScreen({ navigation }) {
@@ -22,28 +29,72 @@ export default function ProfileScreen({ navigation }) {
 
     const handleLogout = async () => {
         await signOut(auth);
-        navigation.replace('Login'); // volta pra tela de login
+        navigation.replace('Login');
     };
 
     if (!userData) {
         return (
-            <View style={styles.container}>
-                <Text>Carregando...</Text>
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#2b8085" />
             </View>
         );
     }
 
     return (
         <View style={styles.container}>
-            <Text style={styles.label}>Nome: {userData.nome}</Text>
-            <Text style={styles.label}>Email: {userData.email}</Text>
-            <Text style={styles.label}>Telefone: {userData.phone}</Text>
-            <Button title="Sair" onPress={handleLogout} />
+            <Text style={styles.title}>Minha Conta</Text>
+            <Text style={styles.label}>Nome: <Text style={styles.value}>{userData.nome}</Text></Text>
+            <Text style={styles.label}>Email: <Text style={styles.value}>{userData.email}</Text></Text>
+            <Text style={styles.label}>Telefone: <Text style={styles.value}>{userData.phone}</Text></Text>
+
+            <TouchableOpacity style={styles.button} onPress={handleLogout}>
+                <Text style={styles.buttonText}>Sair</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
+                <Text style={styles.buttonText}>Voltar</Text>
+            </TouchableOpacity>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: 'center', padding: 20 },
-    label: { fontSize: 18, marginBottom: 10 }
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    container: {
+        flex: 1,
+        padding: 20,
+        justifyContent: 'center'
+    },
+    title: {
+        fontSize: 26,
+        fontWeight: 'bold',
+        color: '#2b8085',
+        textAlign: 'center',
+        marginBottom: 30
+    },
+    label: {
+        fontSize: 18,
+        marginBottom: 12,
+        fontWeight: '600'
+    },
+    value: {
+        fontWeight: 'normal',
+        color: '#333'
+    },
+    button: {
+        backgroundColor: '#2b8085',
+        paddingVertical: 14,
+        borderRadius: 10,
+        width: '100%',
+        alignItems: 'center',
+        marginTop: 30
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold'
+    }
 });

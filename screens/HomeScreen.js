@@ -1,13 +1,23 @@
-import { View, Text, Button, StyleSheet } from 'react-native';
-
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 
 export default function HomeScreen({ navigation }) {
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Tela Inicial funcionando ✅</Text>
-            <Button title="Minha Conta" onPress={() => navigation.navigate('Profile')} />
-            <Button title="Adicionar Gasto" onPress={() => navigation.navigate('AddExpense')} />
-            <Button title="Ver gastos" onPress={() => navigation.navigate('Expenses')} />
+            <Text style={styles.title}>Tela Inicial</Text>
+
+            <ScrollView contentContainerStyle={styles.content}>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Profile')}>
+                    <Text style={styles.buttonText}>Minha Conta</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddExpense')}>
+                    <Text style={styles.buttonText}>Adicionar Gasto</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Expenses')}>
+                    <Text style={styles.buttonText}>Ver Gastos</Text>
+                </TouchableOpacity>
+            </ScrollView>
         </View>
     );
 }
@@ -15,13 +25,35 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        paddingTop: 60,
+        paddingHorizontal: 20
     },
-    text: {
-        fontSize: 20,
+    title: {
+        fontSize: 28,
         fontWeight: 'bold',
-        marginBottom: 16,
+        color: '#2b8085',
+        textAlign: 'center',
+        marginBottom: 30
     },
+    content: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 20
+    },
+    button: {
+        backgroundColor: '#2b8085',
+        paddingVertical: 16,
+        paddingHorizontal: 24,
+        borderRadius: 10,
+        width: '100%',
+        alignItems: 'center',
+        marginBottom: 16,
+        elevation: 2
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 17,
+        fontWeight: 'bold'
+    }
 });

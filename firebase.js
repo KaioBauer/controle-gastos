@@ -1,3 +1,11 @@
+// import {
+//     FIREBASE_API_KEY,
+//     FIREBASE_AUTH_DOMAIN,
+//     FIREBASE_PROJECT_ID,
+//     FIREBASE_STORAGE_BUCKET,
+//     FIREBASE_MESSAGING_SENDER_ID,
+//     FIREBASE_APP_ID
+// } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp, getApps } from 'firebase/app';
 import {
@@ -6,6 +14,8 @@ import {
     signOut,
     signInWithEmailAndPassword,
     sendPasswordResetEmail,
+    getReactNativePersistence,
+    initializeAuth
 } from 'firebase/auth';
 import {
     getFirestore,
@@ -21,20 +31,25 @@ import {
     deleteDoc,
     updateDoc
 } from 'firebase/firestore';
+import { Platform } from 'react-native';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBjylCeZQP7BcY9sL7O0tyGNVrThwFO5VA",
-    authDomain: "controle-gastos-85b7d.firebaseapp.com",
-    projectId: "controle-gastos-85b7d",
-    storageBucket: "controle-gastos-85b7d.firebasestorage.app",
-    messagingSenderId: "474375724474",
-    appId: "1:474375724474:web:63d078f75a8f006547d183"
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.FIREBASE_APP_ID
 };
 
-// evita erro de duplicação de app
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
-const auth = getAuth(app);
+const auth = Platform.OS === 'web'
+    ? getAuth(app)
+    : initializeAuth(app, {
+        persistence: getReactNativePersistence(AsyncStorage)
+    });
+
 const db = getFirestore(app);
 
 export {

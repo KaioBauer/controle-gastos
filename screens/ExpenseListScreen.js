@@ -1,4 +1,12 @@
-import { View, Text, SectionList, StyleSheet, Button } from 'react-native';
+import { useEffect, useState } from 'react';
+import {
+    View,
+    Text,
+    SectionList,
+    StyleSheet,
+    TouchableOpacity,
+    SafeAreaView
+} from 'react-native';
 import {
     auth,
     db,
@@ -10,7 +18,6 @@ import {
     deleteDoc,
     doc
 } from '../firebase';
-import { useEffect, useState } from 'react';
 
 export default function ExpenseListScreen({ navigation }) {
     const [sections, setSections] = useState([]);
@@ -47,15 +54,13 @@ export default function ExpenseListScreen({ navigation }) {
                     title: date,
                     data: grouped[date]
                 }));
+
                 const totalValue = querySnapshot.docs.reduce((acc, docSnap) => {
                     const data = docSnap.data();
                     return acc + parseFloat(data.value || 0);
                 }, 0);
 
                 setTotal(totalValue);
-                setSections(sectionsArray);
-
-
                 setSections(sectionsArray);
             } catch (error) {
                 console.log('Erro ao buscar gastos:', error);
@@ -83,36 +88,112 @@ export default function ExpenseListScreen({ navigation }) {
         <View style={styles.item}>
             <Text style={styles.desc}>{item.description}</Text>
             <Text style={styles.value}>R$ {item.value.toFixed(2)}</Text>
-            <Button title="Editar" onPress={() => navigation.navigate('EditExpense', item)} />
-            <Button title="Excluir" color="red" onPress={() => handleDelete(item.id)} />
+
+            <View style={styles.actions}>
+                <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('EditExpense', item)}>
+                    <Text style={styles.editText}>Editar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.deleteBtn} onPress={() => handleDelete(item.id)}>
+                    <Text style={styles.deleteText}>Excluir</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 
     const renderSectionHeader = ({ section: { title } }) => (
         <Text style={styles.header}>{title}</Text>
-
     );
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.total}>Total gasto: R$ {total.toFixed(2)}</Text>
-            <Text style={styles.title}>Meus Gastos por Data</Text>
-            <SectionList
-                sections={sections}
-                keyExtractor={(item) => item.id}
-                renderItem={renderItem}
-                renderSectionHeader={renderSectionHeader}
-            />
-        </View>
+        <SafeAreaView style={styles.safeArea}>
+            <View style={styles.container}>
+                <Text style={styles.title}>Meus Gastos</Text>
+                <Text style={styles.total}>Total gasto: R$ {total.toFixed(2)}</Text>
+                <SectionList
+                    sections={sections}
+                    keyExtractor={(item) => item.id}
+                    renderItem={renderItem}
+                    renderSectionHeader={renderSectionHeader}
+                    contentContainerStyle={{ paddingBottom: 40 }}
+                />
+            </View>
+        </SafeAreaView>
     );
 }
 
+
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 16 },
-    title: { fontSize: 22, fontWeight: 'bold', marginBottom: 12 },
-    header: { fontSize: 18, fontWeight: 'bold', marginTop: 16, backgroundColor: '#ddd', padding: 6 },
-    item: { backgroundColor: '#f5f5f5', padding: 10, marginBottom: 10, borderRadius: 6 },
-    desc: { fontSize: 16 },
-    value: { fontWeight: 'bold', marginTop: 4 },
-    total: { fontSize: 18, fontWeight: 'bold', marginBottom: 8, color: '#333' },
+    container: {
+        flex: 1,
+        padding: 16,
+        backgroundColor: '#fff'
+    },
+    title: {
+        fontSize: 32,
+        fontWeight: 'bold',
+        color: '#2b8085',
+        marginBottom: 10,
+        marginTop: 10
+    },
+    total: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 6
+    },
+    header: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        backgroundColor: '#e0f2f1',
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        borderRadius: 6,
+        marginTop: 14,
+        marginBottom: 6
+    },
+    item: {
+        backgroundColor: '#f5f5f5',
+        padding: 14,
+        borderRadius: 8,
+        marginBottom: 10
+    },
+    desc: {
+        fontSize: 16,
+        fontWeight: '500'
+    },
+    value: {
+        fontWeight: 'bold',
+        color: '#2b8085',
+        marginTop: 6,
+        marginBottom: 12
+    },
+    actions: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    editBtn: {
+        backgroundColor: '#2b8085',
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 6
+    },
+    editText: {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    deleteBtn: {
+        backgroundColor: '#d9534f',
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 6
+    },
+    deleteText: {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#fff'
+    },
 });
